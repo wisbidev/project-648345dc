@@ -1,236 +1,219 @@
-# Architecture Overview — Landing Page
+# Architecture Overview — Giới thiệu bản thân
 
-**Project**: Giới thiệu bản thân  
-**Shape**: `static` — frontend only, no backend, no database  
-**Last updated**: 2026-05-27
+**Project:** Giới thiệu bản thân (personal introduction landing page)
+**Shape:** `static` — frontend only, no backend, no database
+**Last updated:** 2026-05-27
 
 ---
 
 ## 1. Tech Stack
 
-| Layer | Technology | Version | Notes |
-|---|---|---|---|
-| Frontend framework | Next.js | 15.x | App Router, TypeScript |
-| Language | TypeScript | 5.x | Strict mode enabled |
-| Styling | Tailwind CSS | 3.x | Custom design tokens from `design/design-system.md` |
-| Linting | ESLint | 9.x | `next/core-web-vitals` + `next/typescript` |
-| Container | Docker | — | Multi-stage build for production |
-| CI/CD | GitHub Actions | — | Lint, build, compose validation |
+| Layer | Technology | Version / Notes |
+|---|---|---|
+| Framework | Next.js | 15, App Router, TypeScript |
+| Styling | Tailwind CSS | v3 |
+| Linting | ESLint | v8, extends `next/core-web-vitals` + `next/typescript` |
+| Container | Docker | `docker compose up` boots the frontend |
+| CI | GitHub Actions | `.github/workflows/ci.yml` |
 
-**Rejected alternatives**
-
-| Alternative | Reason for rejection |
-|---|---|
-| Vite / plain React | Next.js provides SSR/SSG for performance, file-based routing, and image optimization — all beneficial for a landing page. |
-| CSS Modules or plain CSS | Tailwind's utility-first approach aligns with the design system's token-based approach and enables faster iteration on the design system. |
-| Server-side backend (Go/Node) | Project shape is `static` — no backend, no database. The contact form uses `mailto:` client-side submission per SRS LANDING-006. |
+**No backend, no database.** The contact form submits via `mailto:`. This is intentional: the SRS explicitly opts out of both.
 
 ---
 
-## 2. Folder Structure
+## 2. Project Shape Decision
+
+| Shape | Reason |
+|---|---|
+| `static` | The landing page is pure content. The contact form is a `mailto:` link. There is no data to persist, no user accounts, and no API calls. |
+
+Adding a Go backend or PostgreSQL would be dead weight on every CI run and every future story.
+
+---
+
+## 3. Folder Structure
 
 ```
 project-648345dc/
-├── .env.example              # Root env vars (NEXT_PUBLIC_* for frontend)
-├── .gitignore
-├── docker-compose.yml        # Frontend service only (static shape)
-├── .github/
-│   └── workflows/
-│       └── ci.yml            # Lint + build + compose validation
 ├── docs/
+│   ├── landing/
+│   │   └── SRS.md                      # Requirements (PM)
 │   └── architecture/
-│       └── overview.md        # This document
+│       └── overview.md                 # This file (TL)
 ├── design/
-│   ├── index.html            # Approved mockup (source of truth)
-│   └── design-system.md      # Design tokens and component specs
-└── code/
-    └── frontend/             # Next.js application
-        ├── .env.example
-        ├── .eslintrc.json
-        ├── .gitignore
-        ├── Dockerfile        # Multi-stage build
-        ├── next.config.js
-        ├── package.json
-        ├── package-lock.json
-        ├── postcss.config.js
-        ├── tailwind.config.ts
-        ├── tsconfig.json
-        └── app/
-            ├── layout.tsx    # Root layout (Server Component)
-            ├── page.tsx      # Home page (Server Component)
-            └── globals.css   # Design tokens + base styles
+│   ├── index.html                      # Approved mockup (source of truth)
+│   └── design-system.md               # Design tokens + component specs
+├── code/
+│   └── frontend/                       # Next.js 15 App Router (static export)
+│       ├── app/
+│       │   ├── layout.tsx             # Root layout, fonts, globals
+│       │   ├── page.tsx               # Landing page (Server Component)
+│       │   ├── globals.css             # All tokens, base styles, utilities
+│       │   └── [section]/
+│       │       └── page.tsx           # Each section as a Server Component
+│       ├── components/
+│       │   ├── Nav.tsx                # "use client" — fixed nav, hamburger
+│       │   ├── Hero.tsx               # "use client" — scroll-reveal, CTAs
+│       │   ├── About.tsx              # Server Component
+│       │   ├── Skills.tsx             # "use client" — meter animation
+│       │   ├── Timeline.tsx           # Server Component
+│       │   ├── Contact.tsx            # "use client" — mailto form + validation
+│       │   ├── Footer.tsx             # Server Component
+│       │   └── ui/                    # Shared primitives (Button, SectionHead…)
+│       ├── public/
+│       │   └── favicon.ico
+│       ├── package.json
+│       ├── package-lock.json
+│       ├── next.config.js
+│       ├── tsconfig.json
+│       ├── tailwind.config.ts
+│       ├── postcss.config.js
+│       ├── .eslintrc.json
+│       ├── .env.example
+│       ├── .gitignore
+│       └── Dockerfile
+├── docker-compose.yml
+├── .env.example
+├── .gitignore
+└── .github/
+    └── workflows/
+        └── ci.yml
 ```
 
 ---
 
-## 3. Key Design Decisions
+## 4. Key Design Decisions
 
-### 3.1 Static Shape — No Backend
+### 4.1 Static Export
 
-The SRS explicitly states this is a **static landing page** with no backend or database. The contact form submits via `mailto:` link (LANDING-006), not a server endpoint. No Go backend, no PostgreSQL, no migrations.
+`next.config.js` uses `output: 'export'` so the build produces a fully static `out/` directory deployable to any CDN or static host. No server-side rendering at runtime.
 
-### 3.2 Server / Client Component Boundary
+**Rejected alternative: SSR + API routes** — adds a running Node.js server and complicates deployment for no benefit. The SRS explicitly requires no backend.
 
-In Next.js 15 App Router, **every component is a Server Component by default**. The following require `"use client"` directive:
+### 4.2 Server / Client Component Boundary
 
-- Any component using event handlers (`onClick`, `onSubmit`, `onChange`)
-- Any component using `useState`, `useEffect`, `useRef`
-- Any component passing a function to a child
+Next.js App Router treats every component as a **Server Component** by default. A component becomes a Client Component only when its file begins with `"use client"`.
 
-The page skeleton (`app/page.tsx`) stays a Server Component that only composes children. Individual section components (`Hero`, `About`, `Skills`, etc.) will be Client Components where interaction is needed.
+The following components **must** be Client Components (they use browser APIs, event handlers, or `useState`/`useEffect`):
 
-### 3.3 Design Token Alignment
+| Component | Reason |
+|---|---|
+| `Nav` | `scroll` event listener, `aria-expanded` state, hamburger toggle |
+| `Hero` | `IntersectionObserver` for scroll-reveal, smooth scroll CTAs |
+| `Skills` | `IntersectionObserver` for meter animation |
+| `Contact` | Form state, `mailto:` construction, validation |
 
-All CSS custom properties and Tailwind config values are derived from `design/design-system.md`. The primary tokens are:
+All other components are Server Components. A missing `"use client"` on any of the above fails `next build` with "Event handlers cannot be passed to Client Component props" — and the error names `page.tsx`, not the component at fault.
 
-```css
---color-bg: #FAF6F0
---color-surface: #FFFFFF
---color-text: #1F2430
---color-text-muted: #6E7480
---color-primary: #E85D3D
---color-primary-hover: #C94A2E
---color-primary-soft: #FBE9E2
---color-secondary: #1F5C5C
---color-secondary-soft: #E3EFEC
---color-border: #E7DFD4
---color-danger: #C0392B
-```
+### 4.3 Tailwind v3 with Design Tokens
 
-### 3.4 Motion and Accessibility
+Tailwind is configured with the exact color, spacing, and typography tokens from `design/design-system.md`. No arbitrary values in component classes. Tokens that are not in Tailwind's default scale (e.g. `--color-primary-soft`) are added as custom utilities in `globals.css`.
 
-- Scroll-reveal animations use IntersectionObserver with 0.15 threshold
-- `prefers-reduced-motion: reduce` disables all animations/transitions
-- All interactive elements have visible 3px focus ring (`--color-focus: #E85D3D`)
-- Form validation is client-side with inline error messages
-- `aria-expanded` toggles on hamburger menu button
+### 4.4 Contact Form — mailto:
 
-### 3.5 Contact Form Behavior
+Form validation is client-side only. On valid submit, `Contact` constructs a `mailto:` link with prefilled subject and body, then `window.open()` it. No data is ever sent to a server.
 
-Per LANDING-006, the contact form:
-1. Validates client-side (name required, email format, message required)
-2. On valid submit: constructs `mailto:` link with prefilled subject/body
-3. Shows success card (spring animation) that auto-hides after 8 seconds
-4. No backend required — pure client-side behavior
+**Rejected alternative: Formspree / Netlify Forms** — adds a third-party dependency and account requirement. The SRS does not request server-side form handling.
+
+### 4.5 No Backend Scaffold
+
+No `code/backend/` directory exists. The `docker-compose.yml` has no `backend` or `db` service. If a future story requires a backend (e.g. a real contact-email API), a `stateless` or `fullstack` shape will be assessed at that time.
 
 ---
 
-## 4. Naming Conventions
+## 5. Naming Conventions
 
-| Convention | Pattern | Example |
+| Convention | Rule | Example |
 |---|---|---|
-| Component files | `PascalCase.tsx` | `Hero.tsx`, `ContactForm.tsx` |
-| CSS files | `kebab-case.module.css` or inline Tailwind | `globals.css` |
-| Page routes | `page.tsx` | `app/page.tsx` |
-| Layout files | `layout.tsx` | `app/layout.tsx` |
-| Server components | No directive (default) | `app/page.tsx` |
-| Client components | `"use client"` as first line | Components with interactivity |
-| Tailwind classes | kebab-case | `text-primary`, `bg-surface` |
-| CSS custom properties | `--kebab-case` | `--color-primary`, `--shadow-float` |
+| Component files | PascalCase | `Hero.tsx`, `Skills.tsx` |
+| Server Component exports | `export default function ComponentName()` | `export default function Hero() {…}` |
+| Client Component files | Begin with `"use client"` on line 1 | `"use client"\nexport default function Nav() {…}` |
+| CSS custom properties | `--kebab-case` from design tokens | `--color-primary`, `--space-6` |
+| Section IDs | `kebab-case`, matching SRS IDs | `#about`, `#skills`, `#contact` |
+| Image `alt` | Descriptive, Vietnamese | `alt="Minh., chủ sở hữu trang này"` |
 
 ---
 
-## 5. Environment Variables
+## 6. Environment Variables
 
 ### Root `.env.example`
 
+No secrets. Compose-level variables shared by all services.
+
 ```env
-# Frontend (Next.js public vars — exposed to browser)
+# --- Frontend ---
+# The public URL the frontend is accessible at (used in Next.js metadata)
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
-NEXT_PUBLIC_CONTACT_EMAIL=hello@example.com
 ```
 
 ### Frontend `.env.example`
 
 ```env
-# Next.js public vars (exposed to browser)
+# --- Contact form recipient ---
+# The email address the mailto: form sends to
+NEXT_PUBLIC_CONTACT_EMAIL=your-email@example.com
+
+# --- Public site URL ---
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
-NEXT_PUBLIC_CONTACT_EMAIL=hello@example.com
 ```
 
-**Note**: For static deployment, `NEXT_PUBLIC_*` vars are baked at build time. For local Docker Compose, the frontend reads from the root `.env` file via compose.
+All `NEXT_PUBLIC_*` variables are baked at build time. They cannot be changed without a rebuild.
 
 ---
 
-## 6. Running the Project
+## 7. How to Run
 
-### Local Development
+### Prerequisites
+
+- Docker + Docker Compose installed
+- Node.js 20 (for local development without Docker)
+
+### With Docker (full stack)
 
 ```bash
-# Start frontend only (static shape — no backend, no DB)
+cp .env.example .env
+docker compose up --build
+# Frontend → http://localhost:3000
+```
+
+### Local development (no Docker)
+
+```bash
 cd code/frontend
+cp .env.example .env.local
 npm install
 npm run dev
-
-# Or with Docker Compose from root
-docker compose up
+# → http://localhost:3000
 ```
 
-### Production Build
+### Run tests and lint
 
 ```bash
 cd code/frontend
-npm run build
-npm start
-```
-
-### Docker Commands
-
-```bash
-# Validate compose file
-docker compose config -q
-
-# Build and run the stack
-docker compose up --build
-
-# Stop the stack
-docker compose down
+npm run lint     # ESLint
+npm run build    # Next.js production build
+npm test         # Playwright tests (if present)
 ```
 
 ---
 
-## 7. CI Pipeline
+## 8. CI Pipeline
 
-The CI workflow (`.github/workflows/ci.yml`) runs on every PR and push to `main`:
+`.github/workflows/ci.yml` runs on every PR and push to `main`. Jobs:
 
-| Job | Steps | Failures block merge |
-|---|---|---|
-| `frontend` | `npm ci` → `npm run lint` → `npm run build` → `npm test --if-present` | Yes |
-| `compose` | `docker compose config -q` | Yes |
+| Job | What it does |
+|---|---|
+| `frontend` | `npm ci` → `npm run lint` → `npm run build` → `npm test` |
+| `compose` | `docker compose config -q` (validates compose file) |
 
----
-
-## 8. Dependencies
-
-### Production (Frontend)
-
-| Package | Version | Purpose |
-|---|---|---|
-| `next` | ^15.0.0 | React framework |
-| `react` | ^19.0.0 | UI library |
-| `react-dom` | ^19.0.0 | React DOM |
-| `tailwindcss` | ^3.4.0 | Utility CSS |
-| `postcss` | ^8.4.0 | CSS processing |
-| `autoprefixer` | ^10.4.0 | CSS vendor prefixes |
-
-### Development (Frontend)
-
-| Package | Version | Purpose |
-|---|---|---|
-| `typescript` | ^5.0.0 | Type safety |
-| `@types/react` | ^19.0.0 | React type definitions |
-| `@types/node` | ^22.0.0 | Node type definitions |
-| `eslint` | ^9.0.0 | Linting |
-| `eslint-config-next` | ^15.0.0 | Next.js ESLint config |
+Failure on any job blocks merge.
 
 ---
 
-## 9. Verification Checklist
+## 9. Rejected Alternatives and Tradeoffs
 
-- [ ] `docs/architecture/overview.md` covers stack, folder structure, conventions, env vars, and how to run
-- [ ] Key decisions are recorded with their rejected alternatives and tradeoffs
-- [ ] Frontend skeleton lints and builds without errors
-- [ ] `docker compose config -q` passes and `docker compose up` boots the frontend
-- [ ] Frontend has `.env.example` listing every `NEXT_PUBLIC_*` var with comments
-- [ ] CI runs lint, build, and compose validation on every pull request
-- [ ] Conventions saved with `remember` so later agents inherit them
+| Decision | Rejected alternative | Tradeoff |
+|---|---|---|
+| `static` shape | `stateless` with a Go backend | Backend adds ~2 GB Docker image, a migration step, and a running process for a page that has no server-side logic |
+| `mailto:` form | Formspree / third-party form API | Third-party adds an account, a dependency, and a rate limit; `mailto:` is free and requires zero infrastructure |
+| Tailwind v3 | Plain CSS or CSS-in-JS | Tailwind v3 is the established default; CSS-in-JS adds runtime overhead; plain CSS requires more manual naming |
+| No `code/backend/` | Scaffolding a Go skeleton "just in case" | Skeleton is CI debt: every run builds a binary that never runs, and every future agent reads past it wondering if it's used |
