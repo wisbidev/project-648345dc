@@ -5,6 +5,7 @@
  */
 import AboutReveal from './AboutReveal'
 import { aboutMockData } from '@/lib/mock/about-section'
+import styles from './About.module.css'
 
 // ─── Portrait with graceful fallback ────────────────────────────────────────
 
@@ -69,11 +70,8 @@ function StatCard({ numeral, label }: { numeral: string; label: string }) {
     >
       {/* Large numeral in primary colour */}
       <div
-        className="font-display"
+        className={`font-display ${styles.statNumeral}`}
         style={{
-          fontSize: '30px',
-          lineHeight: 1.15,
-          fontWeight: 600,
           color: 'var(--color-primary)',
           marginBottom: 'var(--space-1)',
         }}
@@ -127,7 +125,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="section-padding about-grid"
+      className="section-padding"
       style={{ backgroundColor: 'var(--color-bg)' }}
     >
       <div className="container">
@@ -137,7 +135,7 @@ export default function About() {
         </AboutReveal>
 
         {/* Two-column layout: portrait (0.9fr) + narrative+stats (1.1fr) */}
-        <div className="about-columns">
+        <div className={`about-columns ${styles.columns}`}>
           {/* Left column: portrait */}
           <AboutReveal className="d2">
             <div style={{ maxWidth: '480px' }}>
