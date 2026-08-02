@@ -64,6 +64,7 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
       }`}
       role="article"
       aria-label={skill.name}
+      tabIndex={0}
     >
       {/* Icon tile */}
       <div
@@ -80,18 +81,14 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
       {/* Description */}
       <p className={styles.description}>{skill.description}</p>
 
-      {/* Proficiency — accessible label */}
+      {/* Proficiency — accessible progressbar */}
       <div className={styles.meterLabel}>
-        <span className="sr-only">
-          {skill.name}: {proficiency}% thành thạo
-        </span>
         <span
           role="progressbar"
           aria-valuenow={proficiency}
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-label={`${skill.name} — ${proficiency}%`}
-          className="sr-only"
+          aria-label={`${skill.name}: ${proficiency}% thành thạo`}
         />
       </div>
 
