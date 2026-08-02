@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Giới thiệu bản thân — Minh Nguyen</title>
+<style>
+  :root{
+    --bg:#FAF6F0;
+    --surface:#FFFFFF;
+    --ink:#1F2430;
+    --muted:#6E7480;
+    --accent:#E85D3D;
+    --accent-deep:#C94A2E;
+    --accent-soft:#FBE9E2;
+    --teal:#1F5C5C;
+    --teal-soft:#E3EFEC;
+    --line:#E7DFD4;
+    --radius:22px;
+    --shadow:0 24px 60px -28px rgba(31,36,48,.30);
+    --font-sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-display:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--font-sans);
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--accent);color:#fff}
+  .container{max-width:1120px;margin:0 auto;padding:0 24px}
+  a{color:inherit}
+  img,svg{display:block;max-width:100%}
+
+  :focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:14px 26px;border-radius:999px;
+    font:600 15px/1 var(--font-sans);
+    text-decoration:none;cursor:pointer;border:none;
+    transition:transform .18s ease,box-shadow .18s ease,background .18s ease;
+  }
+  .btn svg{flex:none}
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 10px 24px -10px rgba(232,93,61,.55)}
+  .btn-primary:hover{background:var(--accent-deep);transform:translateY(-2px)}
+  .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+  .btn-ghost:hover{border-color:var(--ink);transform:translateY(-2px)}
+
+  .nav{
+    position:fixed;inset:0 0 auto 0;z-index:50;
+    backdrop-filter:blur(12px);
+    background:rgba(250,246,240,.82);
+    border-bottom:1px solid transparent;
+    transition:border-color .25s ease,box-shadow .25s ease;
+  }
+  .nav.scrolled{border-color:var(--line);box-shadow:0 10px 30px -22px rgba(31,36,48,.35)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .brand{font:700 21px/1 var(--font-display);letter-spacing:.2px;text-decoration:none;color:var(--ink)}
+  .brand em{font-style:normal;color:var(--accent)}
+  .nav-links{display:flex;align-items:center;gap:32px;list-style:none}
+  .nav-links a{
+    text-decoration:none;font-size:14.5px;font-weight:500;color:var(--muted);
+    padding:6px 2px;position:relative;transition:color .18s ease;
+  }
+  .nav-links a::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:2px;
+    background:var(--accent);border-radius:2px;
+    transform:scaleX(0);transform-origin:left;transition:transform .22s ease;
+  }
+  .nav-links a:hover,.nav-links a.active{color:var(--ink)}
+  .nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+  .nav-cta{padding:10px 20px;font-size:14px}
+  .menu-btn{
+    display:none;background:none;border:1.5px solid var(--line);border-radius:12px;
+    width:44px;height:44px;cursor:pointer;align-items:center;justify-content:center;
+  }
+  .menu-btn svg{width:20px;height:20px}
+  .mobile-menu{
+    display:none;position:fixed;top:72px;left:0;right:0;z-index:49;
+    background:var(--bg);border-bottom:1px solid var(--line);
+    box-shadow:var(--shadow);padding:12px 24px 24px;
+  }
+  .mobile-menu.open{display:block}
+  .mobile-menu a{
+    display:block;padding:14px 6px;text-decoration:none;font-weight:600;font-size:16px;
+    color:var(--ink);border-bottom:1px solid var(--line);
+  }
+  .mobile-menu a:last-of-type{border-bottom:none}
+  .mobile-menu .btn{margin-top:16px;justify-content:center}
+
+  section{padding:110px 0}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:16px;
+  }
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--accent);border-radius:2px}
+  .section-title{font:600 clamp(30px,4vw,42px)/1.15 var(--font-display);letter-spacing:-.01em;margin-bottom:16px}
+  .section-lead{color:var(--muted);font-size:17px;max-width:560px}
+
+  .hero{
+    min-height:100vh;display:flex;align-items:center;
+    padding-top:72px;position:relative;overflow:hidden;
+    background:
+      radial-gradient(900px 420px at 88% -10%,rgba(232,93,61,.14),transparent 60%),
+      radial-gradient(700px 380px at -5% 110%,rgba(31,92,92,.12),transparent 55%),
+      var(--bg);
+  }
+  .hero-inner{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:center;padding:72px 0}
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--teal-soft);color:var(--teal);
+    font-size:13px;font-weight:600;padding:8px 16px;border-radius:999px;margin-bottom:24px;
+  }
+  .hero-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .hero h1{font:600 clamp(42px,6vw,68px)/1.06 var(--font-display);letter-spacing:-.02em;margin-bottom:22px}
+  .hero h1 .accent{color:var(--accent);position:relative;white-space:nowrap}
+  .hero h1 .accent::after{
+    content:"";position:absolute;left:0;right:0;bottom:6px;height:12px;z-index:-1;
+    background:var(--accent-soft);border-radius:4px;
+  }
+  .hero p{color:var(--muted);font-size:18px;max-width:520px;margin-bottom:34px}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-socials{display:flex;gap:12px;margin-top:38px}
+  .hero-socials a{
+    width:42px;height:42px;border-radius:12px;border:1.5px solid var(--line);
+    display:inline-flex;align-items:center;justify-content:center;
+    color:var(--muted);transition:all .18s ease;background:var(--surface);
+  }
+  .hero-socials a:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-3px)}
+  .hero-socials svg{width:18px;height:18px}
+
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+
+  .about-inner{display:grid;grid-template-columns:.9fr 1.1fr;gap:72px;align-items:center}
+  .portrait-wrap{position:relative}
+  .portrait{border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;background:var(--teal)}
+  .portrait::after{
+    content:"";position:absolute;inset:-18px 18px 18px -18px;z-index:-1;
+    border:2px dashed var(--accent);border-radius:28px;
+  }
+  .about-copy p{color:var(--muted);font-size:16.5px;margin-bottom:18px}
+  .about-copy p strong{color:var(--ink)}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 14px;text-align:center}
+  .stat b{display:block;font:600 30px/1.1 var(--font-display);color:var(--accent)}
+  .stat span{font-size:12.5px;color:var(--muted);font-weight:500}
+
+  .skills{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .skills-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:52px}
+  .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .skill{
+    padding:30px 28px;border-radius:var(--radius);border:1px solid var(--line);
+    background:var(--bg);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+  }
+  .skill:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:transparent}
+  .skill-icon{
+    width:48px;height:48px;border-radius:14px;margin-bottom:18px;
+    display:inline-flex;align-items:center;justify-content:center;color:#fff;
+  }
+  .skill-icon svg{width:22px;height:22px}
+  .skill h3{font:600 18px/1.3 var(--font-display);margin-bottom:8px}
+  .skill p{font-size:14px;color:var(--muted);margin-bottom:18px}
+  .bar{height:6px;border-radius:6px;background:var(--line);overflow:hidden}
+  .bar i{display:block;height:100%;width:0;border-radius:6px;background:var(--accent);transition:width 1s cubic-bezier(.22,.61,.36,1)}
+  .skill.teal .bar i{background:var(--teal)}
+  .skill-label{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px}
+
+  .timeline{position:relative;max-width:760px;margin:0 auto}
+  .timeline::before{content:"";position:absolute;left:9px;top:8px;bottom:8px;width:2px;background:var(--line)}
+  .t-item{position:relative;padding:0 0 44px 52px}
+  .t-item:last-child{padding-bottom:0}
+  .t-dot{
+    position:absolute;left:0;top:4px;width:20px;height:20px;border-radius:50%;
+    background:var(--surface);border:5px solid var(--accent);box-shadow:0 0 0 4px var(--accent-soft);
+  }
+  .t-item.teal .t-dot{border-color:var(--teal);box-shadow:0 0 0 4px var(--teal-soft)}
+  .t-date{
+    display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--accent);background:var(--accent-soft);padding:4px 12px;border-radius:999px;margin-bottom:10px;
+  }
+  .t-item.teal .t-date{color:var(--teal);background:var(--teal-soft)}
+  .t-item h3{font:600 21px/1.3 var(--font-display);margin-bottom:2px}
+  .t-item .t-org{font-size:14px;font-weight:600;color:var(--muted);margin-bottom:10px}
+  .t-item p{font-size:15px;color:var(--muted)}
+
+  .contact-inner{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:start}
+  .contact-info p{color:var(--muted);font-size:16px;margin:10px 0 26px}
+  .c-row{display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .c-row:last-of-type{border-bottom:none}
+  .c-ico{
+    width:44px;height:44px;border-radius:14px;flex:none;
+    display:inline-flex;align-items:center;justify-content:center;color:#fff;
+  }
+  .c-ico svg{width:19px;height:19px}
+  .c-row b{display:block;font-size:15px}
+  .c-row span{font-size:13.5px;color:var(--muted)}
+  .c-socials{display:flex;gap:12px;margin-top:24px}
+
+  .form-card{padding:36px;box-shadow:var(--shadow)}
+  .form-card h3{font:600 24px/1.2 var(--font-display);margin-bottom:6px}
+  .form-card>p{font-size:14px;color:var(--muted);margin-bottom:26px}
+  .field{margin-bottom:18px}
+  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:7px}
+  .field input,.field textarea{
+    width:100%;font:15px/1.5 var(--font-sans);color:var(--ink);
+    background:var(--bg);border:1.5px solid var(--line);border-radius:14px;
+    padding:13px 16px;transition:border-color .18s ease,box-shadow .18s ease;resize:vertical;
+  }
+  .field input:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+  .field .err{display:none;font-size:12.5px;color:#C0392B;margin-top:6px;font-weight:500}
+  .field.invalid input,.field.invalid textarea{border-color:#C0392B}
+  .field.invalid .err{display:block}
+  .form-actions{display:flex;align-items:center;gap:16px;margin-top:8px;flex-wrap:wrap}
+  .form-note{font-size:12.5px;color:var(--muted)}
+  .spinner{
+    width:16px;height:16px;border-radius:50%;flex:none;
+    border:2px solid rgba(255,255,255,.4);border-top-color:#fff;
+    animation:spin .7s linear infinite;display:none;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .btn.loading .spinner{display:inline-block}
+  .success-card{display:none;text-align:center;padding:48px 24px}
+  .success-card.show{display:block;animation:pop .45s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+  .success-ico{
+    width:72px;height:72px;border-radius:50%;margin:0 auto 20px;
+    background:var(--teal-soft);color:var(--teal);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .success-ico svg{width:34px;height:34px}
+  .success-card h3{font:600 26px/1.2 var(--font-display);margin-bottom:8px}
+  .success-card p{color:var(--muted);font-size:15px;margin-bottom:24px}
+
+  footer{border-top:1px solid var(--line);background:var(--surface);padding:28px 0}
+  .foot-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .foot-inner p{font-size:13.5px;color:var(--muted)}
+  .back-top{
+    display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+    font-size:13.5px;font-weight:600;color:var(--ink);
+    background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:10px 18px;
+    transition:all .18s ease;
+  }
+  .back-top:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-2px)}
+  .back-top svg{width:14px;height:14px}
+
+  @media (max-width:900px){
+    .nav-links,.nav .nav-cta{display:none}
+    .menu-btn{display:inline-flex}
+    .hero-inner{grid-template-columns:1fr;gap:44px;padding:48px 0}
+    .hero{min-height:auto;padding-top:110px}
+    .about-inner,.contact-inner{grid-template-columns:1fr;gap:44px}
+    .skills-grid{grid-template-columns:1fr 1fr}
+    .hero-visual{max-width:420px;margin:0 auto}
+  }
+  @media (max-width:600px){
+    section{padding:80px 0}
+    .skills-grid{grid-template-columns:1fr}
+    .stats{grid-template-columns:repeat(3,1fr)}
+    .stat b{font-size:24px}
+    .form-card{padding:26px 20px}
+    .hero h1 .accent{white-space:normal}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto}
+    .reveal{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<section class="skills" id="skills">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="kicker">Kỹ năng</div>
+      <h2>Những điều tôi làm tốt</h2>
+      <p>Các kỹ năng tôi tích lũy và mài giũa qua nhiều dự án thực tế, từ khám phá đến bàn giao sản phẩm.</p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card reveal" data-w="90">
+        <div class="skill-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <h3>Thiết kế sản phẩm</h3>
+        <p>UX/UI cho web &amp; mobile: wireframe, prototype, design system và thiết kế giao diện tỉ mỉ từng chi tiết.</p>
+        <div class="bar"><i></i></div>
+      </div>
+      <div class="skill-card reveal d1" data-w="85">
+        <div class="skill-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6M13 4l-2 16"/></svg>
+        </div>
+        <h3>Phát triển web</h3>
+        <p>HTML/CSS, JavaScript và React/Next.js — hiện thực hóa thiết kế thành sản phẩm chạy mượt trên mọi thiết bị.</p>
+        <div class="bar"><i></i></div>
+      </div>
+      <div class="skill-card reveal d2" data-w="80">
+        <div class="skill-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M8 11h6M11 8v6"/></svg>
+        </div>
+        <h3>Nghiên cứu người dùng</h3>
+        <p>Phỏng vấn, khảo sát và kiểm thử khả năng sử dụng để đưa quyết định thiết kế dựa trên dữ liệu, không phải cảm tính.</p>
+        <div class="bar"><i></i></div>
+      </div>
+      <div class="skill-card reveal d3" data-w="88">
+        <div class="skill-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/></svg>
+        </div>
+        <h3>Prototyping</h3>
+        <p>Dựng prototype tương tác nhanh với Figma để sớm kiểm chứng ý tưởng và giao tiếp thiết kế rõ ràng với đội ngũ.</p>
+        <div class="bar"><i></i></div>
+      </div>
+      <div class="skill-card reveal d4" data-w="70">
+        <div class="skill-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>
+        </div>
+        <h3>Viết nội dung</h3>
+        <p>Viết copy rõ ràng, đúng giọng điệu cho sản phẩm — từ microcopy trong giao diện đến nội dung thương hiệu.</p>
+        <div class="bar"><i></i></div>
+      </div>
+      <div class="skill-card reveal d4" data-w="75">
+        <div class="skill-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M8 17v-5M13 17V8M18 17v-9"/></svg>
+        </div>
+        <h3>Quản lý dự án</h3>
+        <p>Lên kế hoạch, ưu tiên công việc và phối hợp giữa thiết kế, phát triển và kinh doanh để bàn giao đúng hạn.</p>
+        <div class="bar"><i></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="experience" id="experience">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="kicker">Kinh nghiệm &amp; học vấn</div>
+      <h2>Hành trình của tôi</h2>
+      <p>Các mốc công việc và học tập đã định hình cách tôi nhìn nhận thiết kế và sản phẩm.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div class="tl-head">
+          <span class="tl-date">2022 — nay</span>
+          <span class="tl-role">Nhà thiết kế sản phẩm cấp cao</span>
+        </div>
+        <div class="tl-org">Startup ABC · Hà Nội</div>
+        <p>Dẫn dắt thiết kế cho sản phẩm SaaS phục vụ 30.000+ người dùng; xây dựng design system nội bộ và cải thiện tỷ lệ hoàn tất đăng ký thêm 24%.</p>
+      </div>
+      <div class="tl-item reveal d1">
+        <div class="tl-head">
+          <span class="tl-date">2020 — 2022</span>
+          <span class="tl-role">UI/UX Designer</span>
+        </div>
+        <div class="tl-org">Studio XYZ · Hà Nội</div>
+        <p>Thiết kế giao diện cho hơn 15 dự án web và mobile của khách hàng trong lĩnh vực fintech, giáo dục và thương mại điện tử.</p>
+      </div>
+      <div class="tl-item reveal d2">
+        <div class="tl-head">
+          <span class="tl-date">2018 — 2020</span>
+          <span class="tl-role">Freelance Designer &amp; Developer</span>
+        </div>
+        <div class="tl-org">Tự do · Làm việc từ xa</div>
+        <p>Hợp tác với các startup và doanh nghiệp nhỏ trong nước và quốc tế: từ nhận diện thương hiệu đến website hoàn chỉnh.</p>
+      </div>
+      <div class="tl-item reveal d3">
+        <div class="tl-head">
+          <span class="tl-date">2014 — 2018</span>
+          <span class="tl-role">Cử nhân Thiết kế đồ họa</span>
+        </div>
+        <div class="tl-org">Đại học Mỹ thuật Công nghiệp</div>
+        <p>Tốt nghiệp loại giỏi; luận án về trải nghiệm người dùng trong ứng dụng di động được chọn trưng bày tại triển lãm tốt nghiệp.</p>
+      </div>
+    </div>
+  </div>
+</section>
+  <!-- ============ EXPERIENCE & EDUCATION ============ -->
+  <section id="experience">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Experience &amp; education</span>
+        <h2>My journey so far</h2>
+        <p>Chronological milestones — click "Read more" on any entry to expand the details.</p>
+      </div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot">💼</div>
+          <div class="tl-card">
+            <span class="tl-date">[2022 — Present]</span>
+            <h3>[Current role title]</h3>
+            <div class="org">[Company name] · [City]</div>
+            <p>[One or two sentences describing your current role and impact.]</p>
+            <span class="tl-tag">[Key achievement]</span><span class="tl-tag">[Key achievement]</span>
+            <button class="tl-toggle" aria-expanded="false">Read more ▾</button>
+            <div class="tl-more"><p>[Optional extra paragraph: details of scope, team size, or results you're proud of.]</p></div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">💼</div>
+          <div class="tl-card">
+            <span class="tl-date">[2019 — 2022]</span>
+            <h3>[Previous role title]</h3>
+            <div class="org">[Company name] · [City]</div>
+            <p>[One or two sentences describing this role and your achievements.]</p>
+            <span class="tl-tag">[Key achievement]</span>
+            <button class="tl-toggle" aria-expanded="false">Read more ▾</button>
+            <div class="tl-more"><p>[Optional extra paragraph of details for this role.]</p></div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">🎓</div>
+          <div class="tl-card">
+            <span class="tl-date">[2015 — 2019]</span>
+            <h3>[Degree name]</h3>
+            <div class="org">[University name]</div>
+            <p>[One or two sentences about your studies, focus or honours.]</p>
+            <span class="tl-tag">[Relevant coursework]</span><span class="tl-tag">[Award / activity]</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">🌟</div>
+          <div class="tl-card">
+            <span class="tl-date">[2014]</span>
+            <h3>[First milestone — first job, internship, or the moment it started]</h3>
+            <div class="org">[Where it happened]</div>
+            <p>[One or two sentences about where it all began.]</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact" style="background:var(--surface);border-top:1px solid var(--line)">
+    <div class="container">
+      <div class="section-head">
+        <span class="kicker">Contact</span>
+        <h2>Let's build something together</h2>
+        <p>Fill the form below — it opens your email app with the message pre-filled, so it works with no backend.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h3>Get in touch</h3>
+          <p>I usually reply within [X] days. For anything urgent, email works best.</p>
+          <div class="contact-row">
+            <div class="contact-ic">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div><b>Email</b><a href="mailto:you@example.com">you@example.com</a></div>
+          </div>
+          <div class="contact-row">
+            <div class="contact-ic">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div><b>Location</b><span>[City, Country]</span></div>
+          </div>
+          <div class="contact-row">
+            <div class="contact-ic">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <div><b>Phone</b><span>[+00 000 000 000]</span></div>
+          </div>
+          <div class="socials">
+            <a href="#" aria-label="LinkedIn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
+            <a href="#" aria-label="GitHub"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2.17c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.66.41.35.77 1.05.77 2.12v3.15c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg></a>
+            <a href="#" aria-label="Twitter / X"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.47l8.6-9.83L0 1.15h7.59l5.24 6.93zm-1.29 19.5h2.04L6.49 3.24H4.3z"/></svg></a>
+            <a href="#" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          </div>
+        </div>
+
+        <form class="contact-form" id="contactForm" novalidate>
+          <div class="form-sending" id="formSending">
+            <div class="spinner"></div>
+            <p>Opening your email app…</p>
+          </div>
+          <div class="form-success" id="formSuccess">
+            <div class="ok"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <h3>Your email draft is ready!</h3>
+            <p>Your email app should have opened with the message pre-filled. If it didn't, reach me directly at <strong>you@example.com</strong>.</p>
+          </div>
+          <div id="formFields">
+            <div class="form-group" id="fgName">
+              <label for="name">Your name <span class="req">*</span></label>
+              <input id="name" name="name" type="text" placeholder="Jane Doe" autocomplete="name">
+              <div class="err">Please tell me your name.</div>
+            </div>
+            <div class="form-group" id="fgEmail">
+              <label for="email">Your email <span class="req">*</span></label>
+              <input id="email" name="email" type="email" placeholder="jane@example.com" autocomplete="email">
+              <div class="err">Please enter a valid email address.</div>
+            </div>
+            <div class="form-group" id="fgMsg">
+              <label for="message">Message <span class="req">*</span></label>
+              <textarea id="message" name="message" rows="5" placeholder="Hi! I'd love to talk about…"></textarea>
+              <div class="err">Please write a short message.</div>
+            </div>
+            <button class="btn btn-primary" type="submit" style="width:100%;justify-content:center">Send message
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container footer-inner">
+    <div>© <span id="year"></span> [Your Name]. All rights reserved.</div>
+    <a class="to-top" href="#top">Back to top ↑</a>
+  </div>
+</footer>
+<script>
+  /* ---------- Mobile menu ---------- */
+  var menuBtn = document.getElementById('menuBtn');
+  var navLinks = document.getElementById('navLinks');
+  menuBtn.addEventListener('click', function(){
+    var open = navLinks.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.classList.toggle('menu-open', open);
+  });
+  navLinks.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      navLinks.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded','false');
+      menuBtn.classList.remove('menu-open');
+    });
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && navLinks.classList.contains('open')){
+      navLinks.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded','false');
+      menuBtn.classList.remove('menu-open');
+    }
+  });
+
+  /* ---------- Timeline expand/collapse ---------- */
+  document.querySelectorAll('.tl-toggle').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var more = btn.nextElementSibling;
+      var isOpen = more.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.textContent = isOpen ? 'Read less ▴' : 'Read more ▾';
+    });
+  });
+
+  /* ---------- Animate meters on scroll ---------- */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){
+        en.target.style.width = en.target.getAttribute('data-w');
+        io.unobserve(en.target);
+      }
+    });
+  },{threshold:0.4});
+  document.querySelectorAll('.meter span').forEach(function(bar){
+    bar.setAttribute('data-w', bar.style.width);
+    bar.style.width = '0';
+    io.observe(bar);
+  });
+
+  /* ---------- Contact form: validate, then mailto ---------- */
+  var form = document.getElementById('contactForm');
+  var fields = { name:'fgName', email:'fgEmail', message:'fgMsg' };
+  var validators = {
+    name: function(v){ return v.trim().length >= 2; },
+    email: function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); },
+    message: function(v){ return v.trim().length >= 10; }
+  };
+  function setInvalid(groupId, bad){
+    document.getElementById(groupId).classList.toggle('invalid', bad);
+    return !bad;
+  }
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var ok = true;
+    Object.keys(fields).forEach(function(f){
+      var val = document.getElementById(f).value;
+      ok = setInvalid(fields[f], !validators[f](val)) && ok;
+    });
+    if(!ok){
+      var firstBad = form.querySelector('.invalid input, .invalid textarea');
+      if(firstBad) firstBad.focus();
+      return;
+    }
+    var name = document.getElementById('name').value.trim();
+    var email = document.getElementById('email').value.trim();
+    var msg = document.getElementById('message').value.trim();
+    document.getElementById('formFields').style.display = 'none';
+    document.getElementById('formSending').style.display = 'block';
+    setTimeout(function(){
+      var subject = encodeURIComponent('Message from ' + name + ' — your website');
+      var body = encodeURIComponent(msg + '\n\n— ' + name + '\n' + email);
+      window.location.href = 'mailto:you@example.com?subject=' + subject + '&body=' + body;
+      document.getElementById('formSending').style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+    }, 900);
+  });
+  ['name','email','message'].forEach(function(f){
+    document.getElementById(f).addEventListener('input', function(){
+      document.getElementById(fields[f]).classList.remove('invalid');
+    });
+  });
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
+<header class="nav" id="top">
+  <div class="container nav-inner">
+    <a class="brand" href="#top">Minh<em>.</em></a>
+    <nav aria-label="Main">
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-primary nav-cta" href="#contact">Let's talk</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about">About</a>
+  <a href="#skills">Skills</a>
+  <a href="#experience">Experience</a>
+  <a href="#contact">Contact</a>
+  <a class="btn btn-primary" href="#contact">Let's talk</a>
+</div>
+
+<main>
+  <!-- ================= HERO ================= -->
+  <section class="hero" id="top">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <span class="hero-badge reveal in"><span class="dot"></span>Available for freelance work</span>
+        <h1 class="reveal in">Hi, I'm Minh —<br>I design products that feel <span class="accent">effortless</span>.</h1>
+        <p class="reveal in">Product designer in Ho Chi Minh City with 8+ years of experience turning complex problems into simple, human experiences people actually enjoy using.</p>
+        <div class="hero-ctas reveal in">
+          <a class="btn btn-primary" href="#contact">
+            Get in touch
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#experience">See my journey</a>
+        </div>
+        <div class="hero-socials reveal in">
+          <a href="#contact" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7.5 0h3.8v2.05h.06c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.77 2.65 4.77 6.1V23h-4v-7.3c0-1.74-.03-3.98-2.42-3.98-2.43 0-2.8 1.9-2.8 3.85V23h-4V8z"/></svg></a>
+          <a href="#contact" aria-label="Dribbble"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M8.6 2.7c3.6 3.9 6 8.9 6.6 14.8M2.5 9.2c5 1.2 10.3.9 15.4-1.8M3.4 15.6c4.2-3 9.3-4.3 14.4-3.7"/></svg></a>
+          <a href="#contact" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.2 1.9 1.2 1.1 1.9 2.9 1.4 3.6 1 .1-.8.4-1.4.8-1.7-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3z"/></svg></a>
+        </div>
+      </div>
+      <div class="hero-visual reveal in">
+        <svg viewBox="0 0 420 470" role="img" aria-label="Illustrated portrait of Minh">
+          <defs>
+            <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#2A7A7A"/>
+              <stop offset="1" stop-color="#16494A"/>
+            </linearGradient>
+            <linearGradient id="shirtGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#F0A18B"/>
+              <stop offset="1" stop-color="#E85D3D"/>
+            </linearGradient>
+          </defs>
+          <rect width="420" height="470" rx="34" fill="url(#bgGrad)"/>
+          <circle cx="352" cy="86" r="64" fill="rgba(255,255,255,.09)"/>
+          <circle cx="58" cy="386" r="46" fill="rgba(255,255,255,.07)"/>
+          <circle cx="210" cy="196" r="74" fill="#F6C9A0"/>
+          <path d="M210 268c-58 0-104 38-104 88 0 14 8 26 22 32 34-14 72-20 82-20s48 6 82 20c14-6 22-18 22-32 0-50-46-88-104-88z" fill="#F6C9A0"/>
+          <path d="M152 256c-16-10-44 6-46 30-1 14 10 22 24 20 6 10 18 16 28 12-4-16-2-44-6-62z" fill="#E3A97E"/>
+          <path d="M268 256c16-10 44 6 46 30 1 14-10 22-24 20-6 10-18 16-28 12 4-16 2-44 6-62z" fill="#E3A97E"/>
+          <path d="M128 252c-6 6-8 18-2 26 8 10 22 12 30 4-8-10-16-24-28-30z" fill="#2B2B33"/>
+          <path d="M292 252c6 6 8 18 2 26-8 10-22 12-30 4 8-10 16-24 28-30z" fill="#2B2B33"/>
+          <path d="M178 292c10 8 54 8 64 0-4 12-58 12-64 0z" fill="#E85D3D"/>
+          <path d="M60 466c0-62 68-92 150-92s150 30 150 92v4H60v-4z" fill="url(#shirtGrad)"/>
+          <g stroke="#1F2430" stroke-width="3" stroke-linecap="round" opacity=".85">
+            <path d="M120 150c22-24 54-30 80-20"/>
+            <path d="M302 150c-22-24-54-30-80-20"/>
+          </g>
+          <rect x="38" y="416" width="344" height="3" rx="1.5" fill="rgba(255,255,255,.35)"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section id="about">
+    <div class="container about-inner">
+      <div class="portrait-wrap reveal">
+        <div class="portrait">
+          <svg viewBox="0 0 440 520" role="img" aria-label="Minh at work, illustration">
+            <rect width="440" height="520" fill="#1F5C5C"/>
+            <rect x="0" y="0" width="440" height="520" fill="url(#bgGrad)"/>
+            <circle cx="220" cy="230" r="86" fill="#F6C9A0"/>
+            <path d="M220 314c-66 0-118 42-118 98 0 15 9 28 25 34 39-16 78-22 93-22s54 6 93 22c16-6 25-19 25-34 0-56-52-98-118-98z" fill="#F6C9A0"/>
+            <path d="M158 300c-20-12-52 8-54 36-1 17 12 26 28 24 7 12 21 19 33 14-5-19-2-51-7-74z" fill="#E3A97E"/>
+            <path d="M282 300c20-12 52 8 54 36 1 17-12 26-28 24-7 12-21 19-33 14 5-19 2-51 7-74z" fill="#E3A97E"/>
+            <path d="M188 342c12 10 52 10 64 0-5 14-58 14-64 0z" fill="#E85D3D"/>
+            <rect x="104" y="452" width="232" height="14" rx="7" fill="rgba(255,255,255,.28)"/>
+            <g transform="translate(300,60)">
+              <rect width="120" height="120" rx="18" fill="#E85D3D"/>
+              <rect x="22" y="30" width="76" height="10" rx="5" fill="#fff" opacity=".9"/>
+              <rect x="22" y="52" width="56" height="10" rx="5" fill="#fff" opacity=".6"/>
+              <rect x="22" y="74" width="66" height="10" rx="5" fill="#fff" opacity=".6"/>
+            </g>
+            <g transform="translate(30,60)">
+              <rect width="110" height="110" rx="18" fill="#fff" opacity=".14"/>
+              <circle cx="55" cy="45" r="14" fill="#fff" opacity=".55"/>
+              <rect x="22" y="70" width="66" height="8" rx="4" fill="#fff" opacity=".5"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <div class="about-copy">
+        <span class="eyebrow reveal">About me</span>
+        <h2 class="section-title reveal">Designer by craft, problem-solver by instinct.</h2>
+        <div class="reveal">
+          <p>I'm <strong>Minh Nguyen</strong>, a product designer based in Ho Chi Minh City. For the past eight years I've helped startups and product teams take ideas from a napkin sketch to a shipped, loved product — across fintech, health, and education.</p>
+          <p>My approach is simple: <strong>listen hard, design simply, test early</strong>. I believe great design is invisible — it removes friction so people can focus on what actually matters to them, not on the interface in front of them.</p>
+          <p>When I'm not designing, I'm teaching a UX workshop, photographing street corners, or hunting down the best bánh mì in the city.</p>
+        </div>
+        <div class="stats reveal">
+          <div class="stat"><b>8+</b><span>Years of experience</span></div>
+          <div class="stat"><b>40+</b><span>Products shipped</span></div>
+          <div class="stat"><b>12</b><span>Design awards</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+<section class="contact" id="contact">
+  <div class="container contact-grid">
+    <div class="contact-info reveal">
+      <div class="sec-head" style="margin-bottom:18px">
+        <div class="kicker">Liên hệ</div>
+        <h2>Hãy cùng tạo ra điều gì đó</h2>
+      </div>
+      <p>Bạn đang có một ý tưởng, một dự án cần người đồng hành, hay chỉ muốn trò chuyện về thiết kế? Gửi lời nhắn cho tôi — tôi thường phản hồi trong vòng 1–2 ngày làm việc.</p>
+      <ul class="info-list">
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 7l10 7L22 7"/></svg>
+          hello@minhanh.dev
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1116 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Hà Nội, Việt Nam
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M6 12h12"/></svg>
+          Sẵn sàng nhận dự án mới
+        </li>
+      </ul>
+      <div class="socials">
+        <a href="#" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.6 2 12.2c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.7.3-1.1.6-1.4-2.2-.2-4.6-1.1-4.6-4.9 0-1.1.4-2 1-2.7-.1-.2-.4-1.2.1-2.5 0 0 .8-.3 2.7 1a9.3 9.3 0 015 0c1.9-1.3 2.7-1 2.7-1 .5 1.3.2 2.3.1 2.5.6.7 1 1.6 1 2.7 0 3.8-2.4 4.7-4.6 4.9.3.3.7 1 .7 2v2.9c0 .3.2.6.7.5 4-1.4 6.8-5.2 6.8-9.7C22 6.6 17.5 2 12 2z"/></svg>
+        </a>
+        <a href="#" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 112.5 6 2.5 2.5 0 014.98 3.5zM3 8h4v13H3zM9 8h3.8v1.8h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-6.3c0-1.5 0-3.4-2.1-3.4s-2.4 1.6-2.4 3.3V21H9z"/></svg>
+        </a>
+        <a href="mailto:hello@minhanh.dev" aria-label="Email">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 7l10 7L22 7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="form-card reveal d1">
+      <h3>Gửi lời nhắn</h3>
+      <p>Điền vào biểu mẫu — thư sẽ mở trong ứng dụng email của bạn.</p>
+      <div class="form-success" id="formSuccess" role="status">
+        ✓ Cảm ơn bạn! Ứng dụng email của bạn đã được mở với lời nhắn sẵn sàng gửi.
+      </div>
+      <form id="contactForm" novalidate>
+        <div class="field" data-field>
+          <label for="fName">Tên của bạn</label>
+          <input type="text" id="fName" name="name" placeholder="Ví dụ: Trần Văn B" autocomplete="name">
+          <div class="err-msg">Vui lòng nhập tên của bạn.</div>
+        </div>
+        <div class="field" data-field>
+          <label for="fEmail">Email</label>
+          <input type="email" id="fEmail" name="email" placeholder="ban@example.com" autocomplete="email">
+          <div class="err-msg">Vui lòng nhập email hợp lệ.</div>
+        </div>
+        <div class="field" data-field>
+          <label for="fMsg">Lời nhắn</label>
+          <textarea id="fMsg" name="message" placeholder="Nội dung bạn muốn trao đổi…"></textarea>
+          <div class="err-msg">Vui lòng nhập lời nhắn (tối thiểu 10 ký tự).</div>
+        </div>
+        <div class="form-actions">
+          <button class="btn" type="submit">Gửi lời nhắn
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>
+          </button>
+          <span class="form-note">Sử dụng mailto — không cần máy chủ.</span>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container foot-inner">
+    <p>© <span id="year">2025</span> Nguyễn Minh Anh. Được thiết kế và phát triển bởi chính tôi.</p>
+    <a class="to-top" href="#top">
+      Lên đầu trang
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </a>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu
+  var menuBtn = document.getElementById('menuBtn');
+  var mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.addEventListener('click', function(){
+    var open = mobileMenu.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+  mobileMenu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ mobileMenu.classList.remove('open'); menuBtn.setAttribute('aria-expanded','false'); });
+  });
+
+  // Scroll reveal + skill bars
+  var revealEls = document.querySelectorAll('.reveal');
+  var barEls = document.querySelectorAll('.skill-card');
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        var card = e.target.closest('.skill-card');
+        if(card){
+          card.classList.add('in');
+          var bar = card.querySelector('.bar i');
+          if(bar) bar.style.setProperty('--w', card.dataset.w + '%');
+        }
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold:.15});
+  revealEls.forEach(function(el){ io.observe(el); });
+  barEls.forEach(function(card){ if(!card.classList.contains('reveal')){ /* bars sit inside reveal cards */ } });
+
+  // Contact form
+  var form = document.getElementById('contactForm');
+  var success = document.getElementById('formSuccess');
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var name = document.getElementById('fName');
+    var email = document.getElementById('fEmail');
+    var msg = document.getElementById('fMsg');
+    var ok = true;
+    [name, email, msg].forEach(function(f){
+      var field = f.closest('.field');
+      field.classList.remove('invalid');
+      var bad = f.value.trim() === '' || (f === email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.value.trim())) || (f === msg && f.value.trim().length < 10);
+      if(bad){ field.classList.add('invalid'); ok = false; }
+    });
+    if(!ok) return;
+    var subject = encodeURIComponent('Liên hệ từ trang giới thiệu — ' + name.value.trim());
+    var body = encodeURIComponent('Tên: ' + name.value.trim() + '\nEmail: ' + email.value.trim() + '\n\n' + msg.value.trim());
+    window.location.href = 'mailto:hello@minhanh.dev?subject=' + subject + '&body=' + body;
+    success.classList.add('show');
+    form.reset();
+    setTimeout(function(){ success.classList.remove('show'); }, 8000);
+  });
+
+  // Live re-validate
+  form.querySelectorAll('input, textarea').forEach(function(f){
+    f.addEventListener('input', function(){ f.closest('.field').classList.remove('invalid'); });
+  });
+
+  // Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
