@@ -79,10 +79,12 @@ export default function HeroSection() {
     return (
       <section
         aria-label="Giới thiệu"
+        className="hero-section"
         style={{
           minHeight: '100vh',
           backgroundColor: 'var(--color-bg)',
-          padding: 'var(--space-28) 0',
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
         <div className="container hero-grid">
@@ -154,10 +156,12 @@ export default function HeroSection() {
     return (
       <section
         aria-label="Giới thiệu"
+        className="hero-section"
         style={{
           minHeight: '100vh',
           backgroundColor: 'var(--color-bg)',
-          padding: 'var(--space-28) 0',
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
         <div className="container" style={{ textAlign: 'center', paddingTop: 'var(--space-28)' }}>
@@ -176,10 +180,10 @@ export default function HeroSection() {
     <section
       ref={sectionRef}
       aria-label="Giới thiệu"
+      className="hero-section"
       style={{
         minHeight: '100vh',
         backgroundColor: 'var(--color-bg)',
-        padding: 'var(--space-28) 0',
         display: 'flex',
         alignItems: 'center',
       }}
