@@ -410,6 +410,7 @@ h1, h2, h3 {
   grid-template-columns: 1.15fr 0.85fr;
   gap: var(--space-16);
   align-items: center;
+  width: 100%;
 }
 
 .hero-grid .hero-avatar-col {
@@ -417,6 +418,15 @@ h1, h2, h3 {
   justify-content: center;
 }
 
+/* Tablet: cap hero visual at 420px */
+@media (max-width: 900px) {
+  .hero-grid {
+    max-height: 420px;
+    overflow: hidden;
+  }
+}
+
+/* Mobile: single column, no horizontal scroll at 320px+ */
 @media (max-width: 600px) {
   .hero-grid {
     grid-template-columns: 1fr;
