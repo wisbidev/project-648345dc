@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ContactSectionData,
   contactMockData,
@@ -25,12 +25,12 @@ const ERRORS = {
   message: 'Vui lòng nhập tin nhắn.',
 } as const;
 
-// Simple email format check (no trimming — AC-7 requires whitespace to fail)
+// Simple email format check (no trimming — AC-7: whitespace fails)
 function isValidEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-// ─── Scroll-reveal hook ───────────────────────────────────────────────────────
+// ─── Scroll-reveal hook ─────────────────────────────────────────────────────
 
 function useScrollReveal(threshold = 0.15) {
   const [inView, setInView] = useState(false);
@@ -73,18 +73,15 @@ function useScrollReveal(threshold = 0.15) {
 function Reveal({
   children,
   className = '',
-  delay = '',
 }: {
   children: React.ReactNode;
   className?: string;
-  delay?: string;
 }) {
   const { ref, inView } = useScrollReveal();
   return (
     <div
       ref={ref}
       className={`${styles.reveal} ${inView ? styles.in : ''} ${className}`}
-      style={delay ? { transitionDelay: delay } : undefined}
     >
       {children}
     </div>
@@ -385,7 +382,6 @@ export default function ContactSection() {
   const formRef = useRef<HTMLFormElement>(null);
 
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  const { ref: sectionRef, inView } = useScrollReveal(0.15);
 
   // Detect reduced motion preference
   useEffect(() => {
@@ -396,7 +392,7 @@ export default function ContactSection() {
     return () => mq.removeEventListener('change', handler);
   }, []);
 
-  // Simulate loading from API
+  // Simulate loading from API — replace by swapping lib/mock/contact-section-with-form.ts
   useEffect(() => {
     const timer = setTimeout(() => {
       setData(contactMockData);
@@ -415,7 +411,7 @@ export default function ContactSection() {
   }
 
   // Validate the form; returns the first invalid field ref + error
-  function validateForm(): { field: 'name' | 'email' | 'message'; ref: React.RefObject<HTMLElement> } | null {
+  function validateForm(): { field: 'name' | 'email' | 'message'; ref: React.RefObject<HTMLInputElement | HTMLTextAreaElement> } | null {
     if (!name.trim()) {
       return { field: 'name', ref: nameRef };
     }
@@ -434,7 +430,7 @@ export default function ContactSection() {
     const firstError = validateForm();
     if (firstError) {
       setErrors({ [firstError.field]: ERRORS[firstError.field] });
-      (firstError.ref as React.RefObject<HTMLInputElement | HTMLTextAreaElement>).current?.focus();
+      firstError.ref.current?.focus();
       return;
     }
 
@@ -480,14 +476,14 @@ export default function ContactSection() {
 
   // ── Loaded / success ──────────────────────────────────────────────────────
   return (
-    <section ref={sectionRef} id="contact" className={styles.section} aria-label="Liên hệ">
+    <section id="contact" className={styles.section} aria-label="Liên hệ">
       <div className="container">
         {/* Section head */}
         <div className={styles.sectionHead}>
-          <Reveal className={`${styles.d1}`}>
+          <Reveal className={styles.d1}>
             <span className="eyebrow">{data.kicker}</span>
           </Reveal>
-          <Reveal className={`${styles.d2}`}>
+          <Reveal className={styles.d2}>
             <h2
               className="font-display"
               style={{
@@ -502,7 +498,7 @@ export default function ContactSection() {
               {data.heading}
             </h2>
           </Reveal>
-          <Reveal className={`${styles.d3}`}>
+          <Reveal className={styles.d3}>
             <p
               style={{
                 fontSize: '17px',
@@ -518,7 +514,7 @@ export default function ContactSection() {
         </div>
 
         {/* Two-column layout */}
-        <Reveal className={`${styles.d4}`}>
+        <Reveal className={styles.d4}>
           <div className={styles.columns}>
             {/* ── Contact info column ───────────────────────────────── */}
             <div className={styles.infoColumn}>
