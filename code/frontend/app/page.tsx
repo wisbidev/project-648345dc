@@ -1,15 +1,13 @@
 export default function HomePage() {
   return (
     <main>
-      {/* Landing page sections will be implemented in feature stories */}
-      <div className="container section">
-        <h1 style={{ fontFamily: 'var(--text-display)', fontSize: 'clamp(42px, 6vw, 68px)' }}>
-          Giới thiệu bản thân
-        </h1>
-        <p className="mt-4 text-lg" style={{ color: 'var(--color-text-muted)' }}>
-          Landing page placeholder — sections will be implemented in feature stories.
-        </p>
-      </div>
+      {/* TODO(LANDING-001): Hero section */}
+      {/* TODO(LANDING-002): Nav bar */}
+      {/* TODO(LANDING-003): About section */}
+      {/* TODO(LANDING-004): Skills section */}
+      {/* TODO(LANDING-005): Experience timeline */}
+      {/* TODO(LANDING-006): Contact section */}
+      {/* TODO(LANDING-007): Footer */}
     </main>
-  );
+  )
 }
