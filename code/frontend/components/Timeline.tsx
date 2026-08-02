@@ -61,7 +61,7 @@ export default function Timeline() {
               paddingLeft: '10px',
             }}
           >
-            {/* Vertical rail line — continuous */}
+            {/* Vertical rail line — continuous from first to last dot */}
             <div
               className="timeline-rail"
               style={{
@@ -72,15 +72,16 @@ export default function Timeline() {
               aria-hidden="true"
             />
 
-            {/* Milestone cards */}
+            {/* Milestone cards with scroll-reveal */}
             <div>
-              {milestones.map((milestone, index) => (
-                <TimelineItem
-                  key={milestone.id}
-                  milestone={milestone}
-                  staggerClass={STAGGER_CLASSES[index] ?? ''}
-                />
-              ))}
+              {milestones.map((milestone, index) => {
+                const stagger = STAGGER_CLASSES[index] ?? '';
+                return (
+                  <Reveal key={milestone.id} staggerClass={stagger}>
+                    <TimelineItem milestone={milestone} />
+                  </Reveal>
+                );
+              })}
             </div>
           </div>
         ) : (
