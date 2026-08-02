@@ -75,3 +75,16 @@ loads
   runs, and scrolling is not animated (scroll-behavior auto)
 - All hero content (badge, name, headline, tagline, avatar, both CTAs) is
   immediately visible at its final position
+
+## Coverage split
+
+All five cases above are **automated**: each observable (rendered elements,
+typography tokens, scroll position, computed styles under reduced motion) can be
+asserted by a browser-level test (Playwright) or a component test. No case
+requires manual judgment, so no manual coverage is declared.
+
+## Scope note
+
+This pass covers the happy path only (SRS AC-1..AC-5), per the task instruction.
+Failure, boundary and permission behaviour (story AC-6..AC-9) is specified in
+the SRS failure matrix and will be exercised when the implementation exists.
