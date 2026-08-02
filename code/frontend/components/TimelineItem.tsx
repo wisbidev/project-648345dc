@@ -1,11 +1,4 @@
-interface TimelineMilestone {
-  id: string;
-  date?: string | null;
-  role: string;
-  organization?: string | null;
-  description?: string | null;
-  dotVariant?: 'default' | 'teal';
-}
+import type { TimelineMilestone } from '@/lib/mock/experience-education-timeline';
 
 interface TimelineItemProps {
   milestone: TimelineMilestone;
