@@ -57,23 +57,23 @@ export default function Timeline() {
           <div
             style={{
               maxWidth: '760px',
-              position: 'relative',
-              paddingLeft: '10px',
             }}
           >
-            {/* Vertical rail line — continuous from first to last dot */}
-            <div
-              className="timeline-rail"
-              style={{
-                left: '9px',
-                top: '10px',
-                bottom: '10px',
-              }}
-              aria-hidden="true"
-            />
+            {/* Wrapper with continuous rail — rail is absolute, spans all cards */}
+            <div style={{ position: 'relative' }}>
+              {/* Vertical rail line: absolute, stretches from top to bottom of wrapper */}
+              <div
+                className="timeline-rail"
+                style={{
+                  position: 'absolute',
+                  left: '9px',
+                  top: 0,
+                  bottom: 0,
+                }}
+                aria-hidden="true"
+              />
 
-            {/* Milestone cards with scroll-reveal */}
-            <div>
+              {/* Milestone cards with scroll-reveal */}
               {milestones.map((milestone, index) => {
                 const stagger = STAGGER_CLASSES[index] ?? '';
                 return (
