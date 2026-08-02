@@ -1,7 +1,9 @@
+import HeroSection from '@/components/Hero';
+
 export default function HomePage() {
   return (
     <main>
-      {/* TODO(LANDING-001): Hero section */}
+      <HeroSection />
       {/* TODO(LANDING-002): Nav bar */}
       {/* TODO(LANDING-003): About section */}
       {/* TODO(LANDING-004): Skills section */}
@@ -9,5 +11,5 @@ export default function HomePage() {
       {/* TODO(LANDING-006): Contact section */}
       {/* TODO(LANDING-007): Footer */}
     </main>
-  )
+  );
 }
