@@ -9,17 +9,16 @@ interface TimelineMilestone {
 
 interface TimelineItemProps {
   milestone: TimelineMilestone;
-  staggerClass?: string;
 }
 
-export default function TimelineItem({ milestone, staggerClass }: TimelineItemProps) {
+export default function TimelineItem({ milestone }: TimelineItemProps) {
   const { date, role, organization, description, dotVariant = 'default' } = milestone;
 
   const dotClass = dotVariant === 'teal' ? 'timeline-dot teal' : 'timeline-dot';
   const pillClass = dotVariant === 'teal' ? 'date-pill teal' : 'date-pill';
 
   return (
-    <div className={`flex gap-6 items-start relative ${staggerClass || ''}`}>
+    <div className="flex gap-6 items-start relative">
       {/* Dot column — pinned to rail */}
       <div className="flex flex-col items-center flex-shrink-0 pt-3">
         <div className={dotClass} aria-hidden="true" />
