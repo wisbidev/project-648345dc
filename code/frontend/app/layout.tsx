@@ -1,19 +1,24 @@
-import type { Metadata } from 'next';
-import './globals.css';
+import type { Metadata } from 'next'
+import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Giới thiệu bản thân',
-  description: 'A personal introduction landing page',
-};
+  description: 'Trang giới thiệu bản thân — Minh.',
+  icons: {
+    icon: '/favicon.ico',
+  },
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html lang="vi">
-      <body>{children}</body>
+      <body className="font-body antialiased">
+        {children}
+      </body>
     </html>
-  );
+  )
 }
