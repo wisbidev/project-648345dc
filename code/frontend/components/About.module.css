@@ -1,0 +1,23 @@
+/**
+ * About section responsive layout.
+ * Scoped to this component — no collision with other sections.
+ */
+
+/* Tablet (≤900px): single column */
+@media (max-width: 900px) {
+  .about-columns {
+    grid-template-columns: 1fr !important;
+    gap: 44px !important;
+  }
+
+  .about-columns > div:first-child > div {
+    max-width: 360px !important;
+  }
+}
+
+/* Mobile (≤600px): stats stay 3 columns, smaller numerals */
+@media (max-width: 600px) {
+  .about-columns > div:last-child > div:last-child > div > div > div:first-child {
+    font-size: 24px !important;
+  }
+}
