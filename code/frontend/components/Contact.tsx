@@ -11,8 +11,6 @@ import styles from './Contact.module.css';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-type ContactState = 'loading' | 'loaded' | 'error';
-
 interface FieldErrors {
   name?: string;
   email?: string;
@@ -25,7 +23,7 @@ const ERRORS = {
   message: 'Vui lòng nhập tin nhắn.',
 } as const;
 
-// Simple email format check (no trimming — AC-7: whitespace fails)
+// Simple email format check (no trimming — whitespace fails validation)
 function isValidEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
@@ -366,7 +364,7 @@ function ContactSkeleton() {
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function ContactSection() {
-  const [state, setState] = useState<ContactState>('loading');
+  const [state, setState] = useState<'loading' | 'loaded' | 'error'>('loading');
   const [data, setData] = useState<ContactSectionData>(contactLoadingData);
 
   const [name, setName] = useState('');
@@ -379,7 +377,6 @@ export default function ContactSection() {
   const emailRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const formRef = useRef<HTMLFormElement>(null);
 
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
@@ -401,6 +398,15 @@ export default function ContactSection() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
+
   // Clear field error on input
   function clearError(field: keyof FieldErrors) {
     setErrors((prev) => {
@@ -410,7 +416,7 @@ export default function ContactSection() {
     });
   }
 
-  // Validate the form; returns the first invalid field ref + error
+  // Validate the form; returns the first invalid field ref + field name
   function validateForm(): { field: 'name' | 'email' | 'message'; ref: React.RefObject<HTMLInputElement | HTMLTextAreaElement> } | null {
     if (!name.trim()) {
       return { field: 'name', ref: nameRef };
@@ -561,7 +567,6 @@ export default function ContactSection() {
                     Điền thông tin bên dưới và nhấn gửi — tôi sẽ phản hồi sớm nhất có thể.
                   </p>
                   <form
-                    ref={formRef}
                     className={styles.formFields}
                     onSubmit={handleSubmit}
                     noValidate
