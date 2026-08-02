@@ -327,3 +327,11 @@ h1, h2, h3 {
   border-radius: var(--radius-lg);
   overflow: hidden;
 }
+
+/* ─── About section two-column grid ─────────────────────────── */
+.about-columns {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: var(--space-18);
+  align-items: start;
+}
