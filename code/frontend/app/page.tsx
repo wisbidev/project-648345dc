@@ -1,3 +1,5 @@
+import Timeline from '@/components/Timeline';
+
 export default function HomePage() {
   return (
     <main>
@@ -6,8 +8,9 @@ export default function HomePage() {
       {/* TODO(LANDING-003): About section */}
       {/* TODO(LANDING-004): Skills section */}
       {/* TODO(LANDING-005): Experience timeline */}
+      <Timeline />
       {/* TODO(LANDING-006): Contact section */}
       {/* TODO(LANDING-007): Footer */}
     </main>
-  )
+  );
 }
