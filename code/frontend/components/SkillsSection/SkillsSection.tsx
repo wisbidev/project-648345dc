@@ -99,7 +99,7 @@ function SkillCard({ skill, index }: { skill: Skill; index: number }) {
       <div className={styles.meterTrack}>
         <div
           className={`${styles.meterFill} ${isTeal ? styles.meterFillTeal : ""} ${
-            animated ? styles.animated : ""
+            animated && !prefersReducedMotion ? styles.animated : ""
           }`}
           style={
             animated
