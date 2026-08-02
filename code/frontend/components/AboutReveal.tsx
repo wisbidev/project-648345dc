@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode, type CSSProperties } from 'react'
 
 interface AboutRevealProps {
   children: ReactNode
   className?: string
+  style?: CSSProperties
 }
 
 /**
@@ -12,7 +13,7 @@ interface AboutRevealProps {
  * when it enters the viewport (threshold 0.15).
  * Respects prefers-reduced-motion.
  */
-export default function AboutReveal({ children, className = '' }: AboutRevealProps) {
+export default function AboutReveal({ children, className = '', style }: AboutRevealProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export default function AboutReveal({ children, className = '' }: AboutRevealPro
   }, [])
 
   return (
-    <div ref={ref} className={`reveal ${className}`}>
+    <div ref={ref} className={`reveal ${className}`} style={style}>
       {children}
     </div>
   )
