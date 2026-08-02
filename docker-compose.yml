@@ -6,8 +6,6 @@ services:
     container_name: landing-frontend
     ports:
       - "3000:3000"
-    env_file:
-      - .env
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000"]
