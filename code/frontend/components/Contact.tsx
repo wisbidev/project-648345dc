@@ -32,6 +32,7 @@ function isValidEmail(value: string): boolean {
 
 function useScrollReveal(threshold = 0.15) {
   const [inView, setInView] = useState(false);
+  // Track prefers-reduced-motion locally to skip the observer when set
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -63,7 +64,8 @@ function useScrollReveal(threshold = 0.15) {
     return () => observer.disconnect();
   }, [prefersReducedMotion, threshold]);
 
-  return { ref, inView, prefersReducedMotion };
+  // Only expose what Reveal needs — prefersReducedMotion stays local
+  return { ref, inView };
 }
 
 // ─── Reveal wrapper ───────────────────────────────────────────────────────────
@@ -380,7 +382,7 @@ export default function ContactSection() {
 
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
-  // Detect reduced motion preference
+  // Detect reduced motion preference (single source of truth)
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     setPrefersReducedMotion(mq.matches);
@@ -398,15 +400,6 @@ export default function ContactSection() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Cleanup timer on unmount
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-    };
-  }, []);
-
   // Clear field error on input
   function clearError(field: keyof FieldErrors) {
     setErrors((prev) => {
@@ -416,18 +409,25 @@ export default function ContactSection() {
     });
   }
 
-  // Validate the form; returns the first invalid field ref + field name
-  function validateForm(): { field: 'name' | 'email' | 'message'; ref: React.RefObject<HTMLInputElement | HTMLTextAreaElement> } | null {
+  // Validate the form; returns the first invalid field name
+  function validateForm(): 'name' | 'email' | 'message' | null {
     if (!name.trim()) {
-      return { field: 'name', ref: nameRef };
+      return 'name';
     }
     if (!email.trim() || !isValidEmail(email)) {
-      return { field: 'email', ref: emailRef };
+      return 'email';
     }
     if (!message.trim()) {
-      return { field: 'message', ref: messageRef };
+      return 'message';
     }
     return null;
+  }
+
+  // Focus a specific field by name
+  function focusField(field: 'name' | 'email' | 'message') {
+    if (field === 'name') nameRef.current?.focus();
+    else if (field === 'email') emailRef.current?.focus();
+    else messageRef.current?.focus();
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -435,8 +435,8 @@ export default function ContactSection() {
 
     const firstError = validateForm();
     if (firstError) {
-      setErrors({ [firstError.field]: ERRORS[firstError.field] });
-      firstError.ref.current?.focus();
+      setErrors({ [firstError]: ERRORS[firstError] });
+      focusField(firstError);
       return;
     }
 
@@ -474,6 +474,13 @@ export default function ContactSection() {
     setMessage('');
     setErrors({});
   }
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
   // ── Loading ───────────────────────────────────────────────────────────────
   if (state === 'loading') {
