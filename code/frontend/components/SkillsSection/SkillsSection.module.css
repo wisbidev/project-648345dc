@@ -1,0 +1,213 @@
+/* SkillsSection.module.css — scoped styles, tokens from design/design-system.md */
+
+/* ─── Section band ───────────────────────────────────────────── */
+.section {
+  background-color: var(--color-surface);
+  border-top: var(--border-width) solid var(--color-border);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.container {
+  padding-top: var(--space-28);
+  padding-bottom: var(--space-28);
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+}
+
+/* ─── Section head ──────────────────────────────────────────── */
+.sectionHead {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.sectionHeading {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4vw, 42px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  margin: 0 0 var(--space-6);
+}
+
+.sectionLead {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  margin: 0 auto;
+  max-width: 640px;
+}
+
+/* ─── Grid ──────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Card ──────────────────────────────────────────────────── */
+.card {
+  background-color: var(--color-bg);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 30px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: transform var(--duration-fast) ease,
+              box-shadow var(--duration-fast) ease,
+              border-color var(--duration-fast) ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-float);
+  border-color: transparent;
+}
+
+.card:focus-within {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+  border-radius: var(--radius-card);
+}
+
+/* ─── Icon tile ─────────────────────────────────────────────── */
+.iconTile {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-input);
+  background-color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary-text);
+  flex-shrink: 0;
+  margin-bottom: var(--space-2);
+}
+
+.iconTileTeal {
+  background-color: var(--color-secondary);
+  color: var(--color-primary-text);
+}
+
+/* ─── Typography ────────────────────────────────────────────── */
+.skillName {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text);
+  margin: 0;
+  /* ~50 chars max */
+  max-width: 50ch;
+}
+
+.description {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ─── Proficiency label ─────────────────────────────────────── */
+.meterLabel {
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+/* ─── Meter ─────────────────────────────────────────────────── */
+.meterTrack {
+  height: 6px;
+  background-color: var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-top: var(--space-1);
+}
+
+.meterFill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary);
+  width: 0;
+}
+
+.meterFillTeal {
+  background-color: var(--color-secondary);
+}
+
+/* Animated state — width set inline via JS */
+.meterFill.animated {
+  /* width and transition set inline via style prop */
+}
+
+/* ─── Skeleton loading ──────────────────────────────────────── */
+.iconTileSkeleton {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-input);
+  background-color: var(--color-border);
+  margin-bottom: var(--space-2);
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+.skeletonLine {
+  border-radius: var(--radius-sm);
+  background-color: var(--color-border);
+  margin-bottom: var(--space-2);
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* ─── Error / empty states ──────────────────────────────────── */
+.errorState,
+.emptyState {
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+}
+
+.errorText,
+.emptyText {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ─── Stagger delays ────────────────────────────────────────── */
+.d1 { transition-delay: 0ms; }
+.d2 { transition-delay: 100ms; }
+.d3 { transition-delay: 200ms; }
+.d4 { transition-delay: 300ms; }
+
+/* ─── Screen-reader only utility ───────────────────────────── */
+:global(.sr-only) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
