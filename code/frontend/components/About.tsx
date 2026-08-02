@@ -127,7 +127,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="section-padding"
+      className="section-padding about-grid"
       style={{ backgroundColor: 'var(--color-bg)' }}
     >
       <div className="container">
@@ -137,17 +137,12 @@ export default function About() {
         </AboutReveal>
 
         {/* Two-column layout: portrait (0.9fr) + narrative+stats (1.1fr) */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '0.9fr 1.1fr',
-            gap: 'var(--space-18)',
-            alignItems: 'start',
-          }}
-        >
+        <div className="about-columns">
           {/* Left column: portrait */}
-          <AboutReveal className="d2" style={{ maxWidth: '480px' }}>
-            <Portrait src={portrait} alt={portraitAlt} />
+          <AboutReveal className="d2">
+            <div style={{ maxWidth: '480px' }}>
+              <Portrait src={portrait} alt={portraitAlt} />
+            </div>
           </AboutReveal>
 
           {/* Right column: narrative + stats */}
@@ -183,19 +178,6 @@ export default function About() {
           </div>
         </div>
       </div>
-
-      {/* Responsive overrides — tablet (≤900px): single column */}
-      <style>{`
-        @media (max-width: 900px) {
-          #about > .container > div:last-child {
-            grid-template-columns: 1fr !important;
-            gap: 44px !important;
-          }
-          #about > .container > div:last-child > div:first-child {
-            max-width: 360px !important;
-          }
-        }
-      `}</style>
     </section>
   )
 }
