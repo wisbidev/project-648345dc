@@ -1,0 +1,30 @@
+# Environment
+.env
+.env.local
+
+# Dependencies
+node_modules/
+code/frontend/node_modules/
+
+# Build output
+code/frontend/.next/
+code/frontend/out/
+code/frontend/dist/
+
+# Docker
+*.tar
+
+# Misc
+.DS_Store
+*.log
+npm-debug.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Git
+.git/
+.github/
